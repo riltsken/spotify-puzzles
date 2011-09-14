@@ -11,21 +11,6 @@ The last one has an ambiguous year
 3.	\d{1,2}/\d{1,2}/\d{4}$
 4.	\d{1,2}/\d{1,2}/\d{1,2}$
 """
-"""
-Tests
->>> main("02/4/67")
-2067-02-04
->>> main("10/24/87")
-2067-02-04 is illegal
->>> main("02/4/67")
-2067-02-04
->>> main("02/4/67")
-2067-02-04
->>> main("02/4/67")
-2067-02-04
->>> main("02/4/67")
-2067-02-04
-"""
 
 valid_date = re.compile('(\d{4}/\d{1,2}/\d{1,2}$)|(\d{1,2}/\d{4}/\d{1,2}$)|(\d{1,2}/\d{1,2}/\d{4}$)|(\d{1,2}/\d{1,2}/\d{1,2}$)')
 
@@ -121,7 +106,5 @@ def main(argv=None):
 		invalid_date(date_string)
 
 if __name__ == "__main__":
-	import doctest
-	doctest.testmod()
 	sys.exit(main())
 
