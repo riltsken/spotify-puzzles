@@ -5,11 +5,26 @@ from datetime import date
 """
 We have four different regex here
 3 account for a 4 digit year
-The last one  has an ambiguous year
+The last one has an ambiguous year
 1.	\d{4}/\d{1,2}/\d{1,2}$
 2.	\d{1,2}/\d{4}/\d{1,2}$
 3.	\d{1,2}/\d{1,2}/\d{4}$
 4.	\d{1,2}/\d{1,2}/\d{1,2}$
+"""
+"""
+Tests
+>>> main("02/4/67")
+2067-02-04
+>>> main("10/24/87")
+2067-02-04 is illegal
+>>> main("02/4/67")
+2067-02-04
+>>> main("02/4/67")
+2067-02-04
+>>> main("02/4/67")
+2067-02-04
+>>> main("02/4/67")
+2067-02-04
 """
 
 valid_date = re.compile('(\d{4}/\d{1,2}/\d{1,2}$)|(\d{1,2}/\d{4}/\d{1,2}$)|(\d{1,2}/\d{1,2}/\d{4}$)|(\d{1,2}/\d{1,2}/\d{1,2}$)')
@@ -53,13 +68,15 @@ def main(argv=None):
 		num_2 = date_string.split('/')[1]
 		num_3 = date_string.split('/')[2]
 
+	possible_answers = []
+
 	# convert to integer for comparison below
 	num_1 = int(num_1)
 	num_2 = int(num_2)
 	num_3 = int(num_3)
 	year = int(year)
 
-	# ordering is like so year,month,day from low->high
+	# ordering is like so... year,month,day from low->high
 	day = num_1
 	month = num_2
 	if num_2 > num_1:
@@ -69,27 +86,42 @@ def main(argv=None):
 	# if our last regex is the winner, then we have to compare the year as well
 	if num_3:
 		year = num_3
-		if num_3 > day:
-			year = month
-			month = day
-			day = num_3
-		elif num_3 > month:
-			year = month
-			month = num_3
+		possible_answers.append([year,month,day])
+		if year <= 31:
+			if num_3 > day:
+				year = month
+				month = day
+				day = num_3
+				possible_answers.insert(0,[year,month,day])
+			elif num_3 > month:
+				year = month
+				month = num_3
+				possible_answers.insert(0,[year,month,day])
 
 	# our year could be a single digit or double digit, we need to convert it to 4 digits
-	if len(str(year)) == 1:
-		year = int('200'+str(year))
-	elif len(str(year)) == 2:
-		year = int('20'+str(year))
+	for x,answer in enumerate(possible_answers):
+		year = answer[0]
+		if len(str(year)) == 1:
+			possible_answers[x][0] = int('200'+str(year))
+		elif len(str(year)) == 2:
+			possible_answers[x][0] = int('20'+str(year))
 
 	# if our year,month,day values don't fit in the std library date function
 	# then we know it's not a valid date
-	try:	
-		print date(year,month,day)
-	except ValueError:
+	error = True
+	for a in possible_answers:
+		try:	
+			print date(a[0],a[1],a[2])
+			error = False
+			break
+		except ValueError:
+			pass
+
+	if error:
 		invalid_date(date_string)
 
 if __name__ == "__main__":
-    sys.exit(main())
+	import doctest
+	doctest.testmod()
+	sys.exit(main())
 
