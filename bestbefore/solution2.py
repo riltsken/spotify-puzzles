@@ -1,4 +1,5 @@
 import sys	
+import itertools
 from datetime import date
 
 EARLIEST = date(2000,1,1)
@@ -6,7 +7,6 @@ LATEST = date(2999,12,31)
 
 def invalid_date(date_string):
 	return "%s is illegal" % date_string
-
 
 # convert an integer to the year 2000
 # ex 0 = 2000, 01 = 2001, 300 = 2300
@@ -18,7 +18,6 @@ def convert_year(year):
 
 # new approach, try and find all possible answers and pick the lowest date if one exists
 def validate_date(date_string):
-	import itertools
 	date_string_split = date_string.split('/')
 	more_than_four_or_quad_zero_or_tri_zero = \
 		[True for s in date_string_split if (len(s) > 4 or s == '0000' or s == '000' or not s)]
