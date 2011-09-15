@@ -7,19 +7,21 @@ LATEST = date(2999,12,31)
 def invalid_date(date_string):
 	return "%s is illegal" % date_string
 
-def convert_int_to_year(unformatted_int):
-		f = str(unformatted_int)
-		if len(f) == 1:
-			return int('200'+f)
-		elif len(f) == 2:
-			return int('20'+f)
-		return int(f)
 
-def check_date(date_string):
+# convert an integer to the year 2000
+# ex 0 = 2000, 01 = 2001, 300 = 2300
+def convert_year(year):
+	converted_year = year + 2000
+	if converted_year > 2999 or converted_year < 1:
+		return year 
+	return converted_year
+
+# new approach, try and find all possible answers and pick the lowest date if one exists
+def validate_date(date_string):
 	import itertools
-	# new approach, try and find all possible answers and pick the lowest date if one exists
 	date_string_split = date_string.split('/')
-	more_than_four_or_quad_zero_or_tri_zero =  [True for s in date_string_split if (len(s) > 4 or s == '0000' or s == '000' or not s)]
+	more_than_four_or_quad_zero_or_tri_zero = \
+		[True for s in date_string_split if (len(s) > 4 or s == '0000' or s == '000' or not s)]
 	if not len(date_string_split) == 3 or more_than_four_or_quad_zero_or_tri_zero:
 		return invalid_date(date_string)
 	
@@ -29,14 +31,15 @@ def check_date(date_string):
 	# using permutations we dont really have to worry about order
 	# sets = [
 	#	[A,B,C]
-	#	[B,A,C]
-	#	[C,A,B]
+	#	[convert(A),B,C]
+	#	[convert(B),A,C]
+	#	[convert(C),A,B]
 	#	]
 	date_sets = [
 		[date_numbers[0],date_numbers[1],date_numbers[2]],
-		[convert_int_to_year(date_numbers[0]),date_numbers[1],date_numbers[2]],
-		[convert_int_to_year(date_numbers[1]),date_numbers[0],date_numbers[2]],
-		[convert_int_to_year(date_numbers[2]),date_numbers[0],date_numbers[1]]
+		[convert_year(date_numbers[0]),date_numbers[1],date_numbers[2]],
+		[convert_year(date_numbers[1]),date_numbers[0],date_numbers[2]],
+		[convert_year(date_numbers[2]),date_numbers[0],date_numbers[1]]
 	]
 	
 	possible_answers = []
@@ -67,7 +70,7 @@ def main(argv=None):
 	# but we can use it as a function as well
 	date_string = argv or ' '.join(sys.argv[1:])
 
-	print check_date(date_string)
+	print validate_date(date_string)
 
 if __name__ == "__main__":
 	sys.exit(main())
