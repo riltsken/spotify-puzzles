@@ -67,11 +67,12 @@ def main(argv=None):
 	if num_2 > num_1:
 		day = num_2
 		month = num_1
+	possible_answers.append([year,month,day])
 
 	# if our last regex is the winner, then we have to compare the year as well
 	if num_3:
 		year = num_3
-		possible_answers.append([year,month,day])
+		possible_answers.insert(0, [year,month,day])
 		if year <= 31:
 			if num_3 > day:
 				year = month
