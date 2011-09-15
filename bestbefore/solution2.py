@@ -61,8 +61,8 @@ def validate_date(date_string):
 	if not possible_answers:
 		return invalid_date(date_string)
 
-	possible_answers.sort()
-	return possible_answers[0]
+	possible_answers.sort() 
+	return possible_answers[0] #return the earliest date of the sorted dates
 
 def main(argv=None):
 	# Assuming the input is coming from the command line 
