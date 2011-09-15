@@ -1,3 +1,4 @@
+import sys	
 from datetime import date
 
 def invalid_date(date_string):
@@ -14,15 +15,15 @@ def convert_int_to_year(unformatted_int):
 def check_date(date_string):
 
 	import itertools
-	# new approach, try and force all possible answers and pick the lowest date if one exists
+	# new approach, try and find all possible answers and pick the lowest date if one exists
 	possible_answers = []
 
-	date_string = date_string.split('/')
-	if not len(date_string) == 3:
-		invalid_date(date_string)
-		return
+	date_string_split = date_string.split('/')
+	more_than_four_or_quad_zero =  [True for s in date_string_split if (len(s) > 4 or s == '0000')]
+	if not len(date_string_split) == 3 or more_than_four_or_quad_zero:
+		return invalid_date(date_string)
 	
-	date_numbers = [int(date_string[0]),int(date_string[1]),int(date_string[2])]
+	date_numbers = [int(date_string_split[0]),int(date_string_split[1]),int(date_string_split[2])]
 	for i in itertools.permutations(date_numbers):
 		try:
 			possible_answers.append(date(i[0],i[1],i[2]))
@@ -70,8 +71,7 @@ def check_date(date_string):
 	return final_answers[0]
 
 def main(argv=None):
-	# For now we are assuming the input is coming from the command line
-	# although the puzzle mentions a file so we might have to take that into account instead
+	# Assuming the input is coming from the command line but we can use it as a function as well
 	date_string = argv or ' '.join(sys.argv[1:])
 
 	print check_date(date_string)
