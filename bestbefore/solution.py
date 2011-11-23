@@ -1,3 +1,5 @@
+""" LOOK AT SOLUTION 2, THIS ONE SUCKS! :) """
+
 import sys
 import re
 from datetime import date
